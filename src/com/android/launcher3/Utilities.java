@@ -71,6 +71,7 @@ import android.widget.LinearLayout;
 import androidx.core.graphics.ColorUtils;
 import androidx.core.os.BuildCompat;
 
+import com.android.launcher3.LauncherModel;
 import com.android.launcher3.dragndrop.FolderAdaptiveIcon;
 import com.android.launcher3.graphics.GridCustomizationsProvider;
 import com.android.launcher3.graphics.TintedDrawableSpan;
@@ -84,6 +85,7 @@ import com.android.launcher3.pm.ShortcutConfigActivityInfo;
 import com.android.launcher3.shortcuts.ShortcutKey;
 import com.android.launcher3.shortcuts.ShortcutRequest;
 import com.android.launcher3.util.IntArray;
+import com.android.launcher3.util.LooperExecutor;
 import com.android.launcher3.util.PackageManagerHelper;
 import com.android.launcher3.views.BaseDragLayer;
 import com.android.launcher3.widget.PendingAddShortcutInfo;
@@ -95,6 +97,8 @@ import java.util.Locale;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static com.android.launcher3.util.Executors.MODEL_EXECUTOR;
 
 /**
  * Various utilities shared amongst the Launcher's classes.
@@ -126,6 +130,8 @@ public final class Utilities {
             || Build.VERSION.SDK_INT >= Build.VERSION_CODES.S;
 
     public static final String KEY_ACTION_TOAST_ENABLED = "pref_action_toast_enabled";
+
+    private static final long WAIT_BEFORE_RESTART = 250;
 
     /**
      * Set on a motion event dispatched from the nav bar. See {@link MotionEvent#setEdgeFlags(int)}.
@@ -869,5 +875,11 @@ public final class Utilities {
     public static boolean isActionToastEnabled(Context context) {
         SharedPreferences prefs = getPrefs(context.getApplicationContext());
         return prefs.getBoolean(KEY_ACTION_TOAST_ENABLED, true);
+    }
+
+    public static void restart() {
+        (new Handler(MODEL_EXECUTOR.getLooper())).postDelayed(() -> {
+            android.os.Process.killProcess(android.os.Process.myPid());
+        }, WAIT_BEFORE_RESTART);
     }
 }
