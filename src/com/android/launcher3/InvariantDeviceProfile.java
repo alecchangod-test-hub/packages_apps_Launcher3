@@ -278,13 +278,13 @@ public class InvariantDeviceProfile {
             boolean isSplitDisplay) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         GridOption closestProfile = displayOption.grid;
-        numRows = closestProfile.numRows;
-        numColumns = closestProfile.numColumns;
+        numRows = Utilities.getGridRows(context, closestProfile.numRows);
+        numColumns = Utilities.getGridColumns(context, closestProfile.numColumns);
         dbFile = closestProfile.dbFile;
         defaultLayoutId = closestProfile.defaultLayoutId;
         demoModeLayoutId = closestProfile.demoModeLayoutId;
-        numFolderRows = closestProfile.numFolderRows;
-        numFolderColumns = closestProfile.numFolderColumns;
+        numFolderRows = Utilities.getGridRows(context, closestProfile.numFolderRows);
+        numFolderColumns = Utilities.getGridColumns(context, closestProfile.numFolderColumns);
         isScalable = closestProfile.isScalable;
         devicePaddingId = closestProfile.devicePaddingId;
 
@@ -306,17 +306,12 @@ public class InvariantDeviceProfile {
         numDatabaseHotseatIcons = isSplitDisplay
                 ? closestProfile.numDatabaseHotseatIcons : closestProfile.numHotseatIcons;
 
-        numAllAppsColumns = closestProfile.numAllAppsColumns;
+        numAllAppsColumns = Utilities.getGridColumns(context, closestProfile.numAllAppsColumns);
         numDatabaseAllAppsColumns = isSplitDisplay
                 ? closestProfile.numDatabaseAllAppsColumns : closestProfile.numAllAppsColumns;
 
-        if (Utilities.isGridOptionsEnabled(context)) {
-            allAppsIconSize = displayOption.allAppsIconSize;
-            allAppsIconTextSize = displayOption.allAppsIconTextSize;
-        } else {
-            allAppsIconSize = iconSize;
-            allAppsIconTextSize = iconTextSize;
-        }
+        allAppsIconSize = iconSize;
+        allAppsIconTextSize = iconTextSize;
 
         if (devicePaddingId != 0) {
             devicePaddings = new DevicePaddings(context, devicePaddingId);
