@@ -94,4 +94,8 @@
     <string name="number_of_hotseat_title">Homescreen quicklaunch icons</string>
     <string name="state_loading">Applying\u2026</string>
 
+    <!-- Swipe down to clear all apps -->
+    <string name="allow_swipe_down_clearall_title">Swipe down to clear all recents</string>
+    <string name="allow_swipe_down_clearall_desc">Enable to clear all recents in the overview screen by swiping down</string>
+
 </resources>
