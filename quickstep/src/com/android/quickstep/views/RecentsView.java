@@ -60,6 +60,8 @@ import android.animation.LayoutTransition.TransitionListener;
 import android.animation.ObjectAnimator;
 import android.animation.PropertyValuesHolder;
 import android.animation.ValueAnimator;
+import android.app.ActivityManager;
+import android.app.IActivityManager;
 import android.annotation.TargetApi;
 import android.app.ActivityManager.RunningTaskInfo;
 import android.content.Context;
@@ -383,6 +385,7 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
     private final int mRowSpacing;
     private final int mGridSideMargin;
     private Button mClearAllButton;
+    private Button mKillAppButton;
     private final Rect mTaskViewDeadZoneRect = new Rect();
     /**
      * Reflects if Recents is currently in the middle of a gesture
@@ -791,6 +794,8 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
         mSplitPlaceholderView = splitPlaceholderView;
         mClearAllButton = (Button) mActionsView.findViewById(R.id.clear_all);
         mClearAllButton.setOnClickListener(this::dismissAllTasks);
+        mKillAppButton = (Button) mActionsView.findViewById(R.id.kill_app);
+        mKillAppButton.setOnClickListener(this::killTask);
         mLockButtonView = (Button) mActionsView.findViewById(R.id.action_lock);
         mLockButtonView.setOnClickListener(this::lockCurrentTask);
         updateLockTaskDrawable();
@@ -2606,6 +2611,22 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
     private void dismissAllTasks(View view) {
         runDismissAnimation(createAllTasksDismissAnimation(DISMISS_TASK_DURATION));
         mActivity.getStatsLogManager().logger().log(LAUNCHER_TASK_CLEAR_ALL);
+    }
+
+    @SuppressWarnings("unused")
+    private void killTask(View view) {
+        IActivityManager am = ActivityManager.getService();
+        TaskView tv = getNextPageTaskView();
+        Task task = tv.getTask();
+        String pkgname = task.key.getPackageName();
+        if (task != null) {
+            try {
+                am.killBackgroundProcesses(pkgname, UserHandle.USER_CURRENT);
+            } catch (Throwable t) {
+                //TODO: handle exception
+            }
+            dismissTask(tv, true, true);
+        }
     }
 
     private void dismissCurrentTask() {
