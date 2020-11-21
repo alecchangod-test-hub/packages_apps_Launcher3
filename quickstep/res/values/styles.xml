@@ -126,13 +126,15 @@
         <item name="android:colorControlHighlight">?attr/workspaceTextColor</item>
     </style>
 
-    <style name="OverviewActionButton"
-        parent="@android:style/Widget.DeviceDefault.Button.Borderless">
+    <style name="OverviewActionButton">
         <item name="android:textColor">@color/overview_button</item>
         <item name="android:drawableTint">@color/overview_button</item>
         <item name="android:tint">?android:attr/textColorPrimary</item>
         <item name="android:drawablePadding">8dp</item>
         <item name="android:textAllCaps">false</item>
+        <item name="android:background">@drawable/ic_dyn_screen</item>
+        <item name="android:padding">12dp</item>
+        <item name="android:elevation">12dp</item>
     </style>
 
     <!-- Icon displayed on the taskbar -->
