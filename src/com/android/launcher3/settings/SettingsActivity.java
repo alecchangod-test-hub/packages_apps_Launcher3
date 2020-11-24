@@ -45,8 +45,9 @@ import androidx.preference.Preference;
 import androidx.preference.Preference.OnPreferenceChangeListener;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceFragmentCompat.OnPreferenceStartFragmentCallback;
-import androidx.preference.PreferenceFragmentCompat.OnPreferenceStartScreenCallback;
+import androidx.preference.PreferenceFragment;
+import androidx.preference.PreferenceFragment.OnPreferenceStartFragmentCallback;
+import androidx.preference.PreferenceFragment.OnPreferenceStartScreenCallback;
 import androidx.preference.PreferenceGroup.PreferencePositionCallback;
 import androidx.preference.PreferenceScreen;
 import androidx.recyclerview.widget.RecyclerView;
@@ -60,6 +61,7 @@ import com.android.launcher3.lineage.LineageUtils;
 import com.android.launcher3.lineage.trust.TrustAppsActivity;
 import com.android.launcher3.statix.icon.IconPackStore;
 import com.android.launcher3.statix.icon.IconPackSettingsActivity;
+import com.android.launcher3.settings.preferences.CustomSeekBarPreference;
 import com.android.launcher3.uioverrides.plugins.PluginManagerWrapper;
 import com.android.launcher3.util.SecureSettingsObserver;
 
@@ -337,6 +339,17 @@ public class SettingsActivity extends FragmentActivity
 
                 case Utilities.HOTSEAT_ICONS:
                      LauncherAppState.getInstanceNoCreate().setNeedsRestart();
+                    return true;
+
+                case Utilities.KEY_ALL_APPS_BACKGROUND_ALPHA:
+                     CustomSeekBarPreference allAppsAlpha =
+                            (CustomSeekBarPreference) findPreference(Utilities.KEY_ALL_APPS_BACKGROUND_ALPHA);
+                    allAppsAlpha.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                        public boolean onPreferenceChange(Preference preference, Object newValue) {
+                            LauncherAppState.getInstanceNoCreate().setNeedsRestart();
+                            return true;
+                        }
+                    });
                     return true;
             }
 

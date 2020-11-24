@@ -102,4 +102,8 @@
     <string name="pref_recents_show_memory_title">Show Free RAM in recents</string>
     <string name="pref_recents_show_memory_summary">Show available free RAM in recents view</string>
 
+    <!-- Change scrim alpha in all apps -->
+    <string name="all_apps_background_opacity_title">All apps background transparency</string>
+    <string name="all_apps_background_opacity_summary">Make the background transparent or fully opaque</string>
+
 </resources>
