@@ -45,12 +45,13 @@ import androidx.preference.Preference;
 import androidx.preference.Preference.OnPreferenceChangeListener;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
-import androidx.preference.PreferenceFragment;
-import androidx.preference.PreferenceFragment.OnPreferenceStartFragmentCallback;
-import androidx.preference.PreferenceFragment.OnPreferenceStartScreenCallback;
+import androidx.preference.PreferenceFragmentCompat.OnPreferenceStartFragmentCallback;
+import androidx.preference.PreferenceFragmentCompat.OnPreferenceStartScreenCallback;
 import androidx.preference.PreferenceGroup.PreferencePositionCallback;
 import androidx.preference.PreferenceScreen;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.android.internal.util.xtended.XtendedUtils;
 
 import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherFiles;
@@ -351,6 +352,12 @@ public class SettingsActivity extends FragmentActivity
                         }
                     });
                     return true;
+
+                case Utilities.KEY_ALLOW_ALL_APPS_BLUR:
+                case Utilities.KEY_ALL_APPS_BLUR:
+                case Utilities.KEY_ALLOW_OVERVIEW_BLUR:
+                case Utilities.KEY_OVERVIEW_BLUR:
+                    return XtendedUtils.supportsBlur();
             }
 
             return true;
