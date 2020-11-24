@@ -17,13 +17,17 @@
 package com.android.launcher3.settings;
 
 import static androidx.core.view.accessibility.AccessibilityNodeInfoCompat.ACTION_ACCESSIBILITY_FOCUS;
+import static com.android.launcher3.SessionCommitReceiver.ADD_ICON_PREFERENCE_KEY;
+import static com.android.launcher3.util.SecureSettingsObserver.newNotificationSettingsObserver;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.TextUtils;
-import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
@@ -31,38 +35,48 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.preference.Preference;
-import androidx.preference.Preference.OnPreferenceChangeListener;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceFragmentCompat.OnPreferenceStartFragmentCallback;
 import androidx.preference.PreferenceFragmentCompat.OnPreferenceStartScreenCallback;
+import androidx.preference.Preference.OnPreferenceChangeListener;
 import androidx.preference.PreferenceGroup.PreferencePositionCallback;
 import androidx.preference.PreferenceScreen;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.android.internal.util.xtended.XtendedUtils;
 
 import com.android.launcher3.LauncherAppState;
 import com.android.launcher3.LauncherFiles;
 import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
+import com.android.launcher3.config.FeatureFlags;
+import com.android.launcher3.uioverrides.plugins.PluginManagerWrapper;
+import com.android.launcher3.util.SecureSettingsObserver;
+
+import com.android.internal.util.xtended.XtendedUtils;
+import com.android.launcher3.statix.icon.IconPackStore;
+import com.android.launcher3.statix.icon.IconPackSettingsActivity;
+import com.android.launcher3.settings.preferences.CustomSeekBarPreference;
 
 /**
- * Settings activity for Launcher.
+ * Icons settings activity for Launcher.
  */
-public class SettingsActivity extends FragmentActivity
+public class SettingsIcons extends FragmentActivity
         implements OnPreferenceStartFragmentCallback, OnPreferenceStartScreenCallback,
-        SharedPreferences.OnSharedPreferenceChangeListener{
+        SharedPreferences.OnSharedPreferenceChangeListener {
+
+    private static final String NOTIFICATION_DOTS_PREFERENCE_KEY = "pref_icon_badging";
+    /** Hidden field Settings.Secure.ENABLED_NOTIFICATION_LISTENERS */
+    private static final String NOTIFICATION_ENABLED_LISTENERS = "enabled_notification_listeners";
 
     public static final String EXTRA_FRAGMENT_ARG_KEY = ":settings:fragment_args_key";
     public static final String EXTRA_SHOW_FRAGMENT_ARGS = ":settings:show_fragment_args";
     private static final int DELAY_HIGHLIGHT_DURATION_MILLIS = 600;
     public static final String SAVE_HIGHLIGHTED_KEY = "android:preference_highlighted";
 
+    public static final String KEY_ICON_PACK = "pref_icon_pack";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (savedInstanceState == null) {
             Bundle args = new Bundle();
@@ -73,7 +87,7 @@ public class SettingsActivity extends FragmentActivity
 
             final FragmentManager fm = getSupportFragmentManager();
             final Fragment f = fm.getFragmentFactory().instantiate(getClassLoader(),
-                    getString(R.string.settings_fragment_name));
+                    getString(R.string.icons_settings_fragment_name));
             f.setArguments(args);
             // Display the fragment as the main content.
             fm.beginTransaction().replace(android.R.id.content, f).commit();
@@ -82,16 +96,8 @@ public class SettingsActivity extends FragmentActivity
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
     }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) { }
 
     private boolean startFragment(String fragment, Bundle args, String key) {
         if (Utilities.ATLEAST_P && getSupportFragmentManager().isStateSaved()) {
@@ -120,13 +126,16 @@ public class SettingsActivity extends FragmentActivity
     public boolean onPreferenceStartScreen(PreferenceFragmentCompat caller, PreferenceScreen pref) {
         Bundle args = new Bundle();
         args.putString(PreferenceFragmentCompat.ARG_PREFERENCE_ROOT, pref.getKey());
-        return startFragment(getString(R.string.settings_title), args, pref.getKey());
+        return startFragment(getString(R.string.icons_category_title), args, pref.getKey());
     }
 
     /**
      * This fragment shows the launcher preferences.
      */
-    public static class LauncherSettingsFragment extends PreferenceFragmentCompat {
+    public static class IconsSettingsFragment extends PreferenceFragmentCompat implements
+        SharedPreferences.OnSharedPreferenceChangeListener {
+
+        private SecureSettingsObserver mNotificationDotsObserver;
 
         private String mHighLightKey;
         private boolean mPreferenceHighlighted = false;
@@ -144,8 +153,22 @@ public class SettingsActivity extends FragmentActivity
             }
 
             getPreferenceManager().setSharedPreferencesName(LauncherFiles.SHARED_PREFERENCES_KEY);
-            setPreferencesFromResource(R.xml.launcher_preferences, rootKey);
+            setPreferencesFromResource(R.xml.launcher_icons_preferences, rootKey);
 
+            updatePreferences();
+
+            Utilities.getPrefs(getContext())
+                    .registerOnSharedPreferenceChangeListener(this);
+        }
+
+        @Override
+        public void onDestroyView () {
+            Utilities.getPrefs(getContext())
+                .unregisterOnSharedPreferenceChangeListener(this);
+            super.onDestroyView();
+        }
+
+        private void updatePreferences() {
             PreferenceScreen screen = getPreferenceScreen();
             for (int i = screen.getPreferenceCount() - 1; i >= 0; i--) {
                 Preference preference = screen.getPreference(i);
@@ -165,11 +188,65 @@ public class SettingsActivity extends FragmentActivity
             return null;
         }
 
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+            switch (key) {
+                case IconPackStore.KEY_ICON_PACK:
+                    updatePreferences();
+                    break;
+            }
+        }
+
         /**
          * Initializes a preference. This is called for every preference. Returning false here
          * will remove that preference from the list.
          */
         protected boolean initPreference(Preference preference) {
+            switch (preference.getKey()) {
+                case NOTIFICATION_DOTS_PREFERENCE_KEY:
+                    if (!Utilities.ATLEAST_OREO ||
+                            !getResources().getBoolean(R.bool.notification_dots_enabled)) {
+                        return false;
+                    }
+
+                    // Listen to system notification dot settings while this UI is active.
+                    mNotificationDotsObserver = newNotificationSettingsObserver(
+                            getActivity(), (NotificationDotsPreference) preference);
+                    mNotificationDotsObserver.register();
+                    // Also listen if notification permission changes
+                    mNotificationDotsObserver.getResolver().registerContentObserver(
+                            Settings.Secure.getUriFor(NOTIFICATION_ENABLED_LISTENERS), false,
+                            mNotificationDotsObserver);
+                    mNotificationDotsObserver.dispatchOnChange();
+                    return true;
+
+                case ADD_ICON_PREFERENCE_KEY:
+                    return Utilities.ATLEAST_OREO;
+
+                case KEY_ICON_PACK:
+                    setupIconPackPreference(preference);
+                    return true;
+
+                case Utilities.ICON_SIZE:
+                    final CustomSeekBarPreference iconSizes = (CustomSeekBarPreference)
+                            findPreference(Utilities.ICON_SIZE);
+                    iconSizes.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                        public boolean onPreferenceChange(Preference preference, Object newValue) {
+                            return true;
+                        }
+                    });
+                    return true;
+
+                case Utilities.FONT_SIZE:
+                    final CustomSeekBarPreference fontSizes = (CustomSeekBarPreference)
+                            findPreference(Utilities.FONT_SIZE);
+                    fontSizes.setOnPreferenceChangeListener(new OnPreferenceChangeListener() {
+                        public boolean onPreferenceChange(Preference preference, Object newValue) {
+                            return true;
+                        }
+                    });
+                    return true;
+            }
             return true;
         }
 
@@ -215,10 +292,23 @@ public class SettingsActivity extends FragmentActivity
 
         @Override
         public void onDestroy() {
-            // if we don't press the home button but the back button to close Settings,
-            // then we must force a restart because the home button watcher wouldn't trigger it
-            LauncherAppState.getInstanceNoCreate().setNeedsRestart();
             super.onDestroy();
+            if (mNotificationDotsObserver != null) {
+                mNotificationDotsObserver.unregister();
+                mNotificationDotsObserver = null;
+            }
+            LauncherAppState.getInstanceNoCreate().checkIfRestartNeeded();
+        }
+
+        private void setupIconPackPreference(Preference preference) {
+            final Context context = getContext();
+            final String defaultLabel = context.getString(R.string.icon_pack_default_label);
+            final String pkgLabel = new IconPackStore(context).getCurrentLabel(defaultLabel);
+            preference.setSummary(pkgLabel);
+            preference.setOnPreferenceClickListener(p -> {
+                startActivity(new Intent(getActivity(), IconPackSettingsActivity.class));
+                return true;
+            });
         }
     }
 }

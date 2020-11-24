@@ -19,6 +19,21 @@
 
 <resources>
 
+    <!-- General -->
+    <string name="settings_title">LauncherX Settings</string>
+
+    <!-- Categories -->
+    <string name="home_category_title">Home Screen</string>
+    <string name="home_category_summary">Set Google now panel and more</string>
+    <string name="icons_category_title">Icons</string>
+    <string name="icons_category_summary">Set icon shape and more</string>
+    <string name="app_drawer_category_title">App Drawer</string>
+    <string name="app_drawer_category_summary">Customize your app drawer</string>
+    <string name="misc_category_title">Miscellaneous</string>
+    <string name="misc_category_summary">Other options</string>
+    <string name="dev_options_title">Developer options</string>
+    <string name="dev_options_desc">Enable some hidden features at your own risk</string>
+
     <!-- Settings Categories -->
     <string name="category_home">HOME</string>
     <string name="category_icon">ICON</string>
