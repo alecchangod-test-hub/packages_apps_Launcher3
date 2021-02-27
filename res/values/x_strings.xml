@@ -40,4 +40,7 @@
     <string name="action_toast_enabled_title">Action Toasts</string>
     <string name="action_toast_enabled_summary">Enable-disable Toast for actions like clear all, kill app, etc.</string>
 
+    <!-- Icon size -->
+    <string name="icon_size_title">Icon size</string>
+
 </resources>
