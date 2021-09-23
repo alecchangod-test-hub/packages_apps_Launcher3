@@ -244,11 +244,12 @@ public class DepthController implements StateHandler<LauncherState>,
         if (supportsBlur) {
             final int blur;
             if (Utilities.isBlurOnOverviewEnabled(mLauncher) &&
+                    !mLauncher.isInState(LauncherState.NORMAL) &&
                     (mLauncher.isInState(LauncherState.OVERVIEW) ||
                     mLauncher.isInState(LauncherState.QUICK_SWITCH))) {
                 blur = (int) (mDepth * Utilities.getOverviewScrimBlur(mLauncher));
             } else {
-                if (Utilities.getAllAppsScrimAlpha(mLauncher) == 100) {
+                if ((Utilities.getAllAppsScrimAlpha(mLauncher) == 100) || mLauncher.isInState(LauncherState.NORMAL)) {
                     // All apps has a solid background. We don't need to draw blurs after it's fully
                     // visible. This will take us out of GPU composition, saving battery and increasing
                     // performance.
