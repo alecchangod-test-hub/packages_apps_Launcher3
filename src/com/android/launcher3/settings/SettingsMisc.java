@@ -190,6 +190,9 @@ public class SettingsMisc extends FragmentActivity
                         return true;
                     });
                     return true;
+
+                case Utilities.KEY_ACTION_TOAST_ENABLED:
+                    return true;
             }
             return true;
         }

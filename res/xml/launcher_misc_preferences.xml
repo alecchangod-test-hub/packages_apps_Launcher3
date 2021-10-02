@@ -17,6 +17,13 @@
             android:persistent="true" />
 
         <SwitchPreference
+            android:key="pref_action_toast_enabled"
+            android:title="@string/action_toast_enabled_title"
+            android:summary="@string/action_toast_enabled_summary"
+            android:defaultValue="true"
+            android:persistent="true"/>
+
+        <SwitchPreference
             android:key="pref_dt_gesture"
             android:title="@string/pref_dt_gesture_title"
             android:summary="@string/pref_dt_gesture_summary"
