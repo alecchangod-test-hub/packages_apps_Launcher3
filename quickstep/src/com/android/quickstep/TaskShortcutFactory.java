@@ -39,6 +39,7 @@ import android.widget.Toast;
 
 import com.android.launcher3.BaseDraggingActivity;
 import com.android.launcher3.DeviceProfile;
+import com.android.launcher3.Utilities;
 import com.android.launcher3.R;
 import com.android.launcher3.config.FeatureFlags;
 import com.android.launcher3.logging.StatsLogManager.LauncherEvent;
@@ -375,9 +376,11 @@ public interface TaskShortcutFactory {
                 if (task != null) {
                     try {
                         iam.forceStopPackage(mPackageName, UserHandle.USER_CURRENT);
-                        Toast appKilled = Toast.makeText(mActivity, R.string.recents_app_killed,
-                            Toast.LENGTH_SHORT);
-                        appKilled.show();
+                        if (Utilities.isActionToastEnabled(mActivity)) {
+                            Toast appKilled = Toast.makeText(mActivity, R.string.recents_app_killed,
+                                  Toast.LENGTH_SHORT);
+                            appKilled.show();
+                        }
                         ((RecentsView)mActivity.getOverviewPanel())
                               .dismissTask(mTaskView, true /* animate */, true /* removeTask */);
                     } catch (RemoteException e) { }

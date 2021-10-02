@@ -278,6 +278,9 @@ public class SettingsActivity extends CollapsingToolbarBaseActivity
                     mShowGoogleAppPref = preference;
                     updateIsGoogleAppEnabled();
                     return true;
+
+                case Utilities.KEY_ACTION_TOAST_ENABLED:
+                    return true;
             }
 
             return true;
