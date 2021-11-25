@@ -215,4 +215,8 @@
     <icon drawable="@drawable/themed_icon_wall_x" package="com.stresscodes.wallp" />
     <icon drawable="@drawable/themed_icon_dolby" package="com.motorola.dolby.dolbyui" />
     <icon drawable="@drawable/themed_icon_boost" package="com.rubenmayayo.reddit" />
+    <icon drawable="@drawable/themed_icon_metro" package="io.github.muntashirakon.Music" />
+    <icon drawable="@drawable/themed_icon_dialer" package="com.android.dialer" />
+    <icon drawable="@drawable/themed_icon_contacts" package="com.android.contacts" />
+    <icon drawable="@drawable/themed_icon_messages" package="com.android.messaging" />
 </icons>
