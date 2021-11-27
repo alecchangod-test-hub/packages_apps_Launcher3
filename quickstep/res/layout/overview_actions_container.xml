@@ -49,6 +49,21 @@
         <ImageButton
             style="@style/OverviewActionButton"
             android:layout_gravity="center_vertical"
+            android:id="@+id/kill_app"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/ThemeControlHighlightWorkspaceColor"
+            android:src="@drawable/ic_kill_app_recents"
+            />
+
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <ImageButton
+            style="@style/OverviewActionButton"
+            android:layout_gravity="center_vertical"
             android:id="@+id/clear_all"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -69,21 +84,6 @@
             android:layout_height="48dp"
             android:drawableStart="@drawable/recents_locked"
             android:theme="@style/ThemeControlHighlightWorkspaceColor"/>
-
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
-
-        <ImageButton
-            style="@style/OverviewActionButton"
-            android:layout_gravity="center_vertical"
-            android:id="@+id/kill_app"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:theme="@style/ThemeControlHighlightWorkspaceColor"
-            android:src="@drawable/ic_kill_app_recents"
-            />
 
         <Space
             android:layout_width="0dp"
