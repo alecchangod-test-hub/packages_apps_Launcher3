@@ -149,6 +149,9 @@ public class SettingsActivity extends CollapsingToolbarBaseActivity
             case Utilities.HOTSEAT_ICONS:
                  LauncherAppState.getInstanceNoCreate().setNeedsRestart();
                  break;
+            case Utilities.KEY_DOCK_SEARCH:
+                LauncherAppState.getInstanceNoCreate().setNeedsRestart();
+                break;
         }
     }
 
@@ -202,9 +205,8 @@ public class SettingsActivity extends CollapsingToolbarBaseActivity
         private boolean mPreferenceHighlighted = false;
         private Preference mDeveloperOptionPref;
 
-        protected static final String GSA_PACKAGE = "com.google.android.googlequicksearchbox";
-
         private Preference mShowGoogleAppPref;
+        private Preference mShowGoogleBarPref;
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
@@ -328,6 +330,11 @@ public class SettingsActivity extends CollapsingToolbarBaseActivity
                         }
                     });
                     return true;
+
+                case Utilities.KEY_DOCK_SEARCH:
+                    mShowGoogleBarPref = preference;
+                    updateIsGoogleAppEnabled();
+                    return true;
             }
 
             return true;
@@ -351,17 +358,12 @@ public class SettingsActivity extends CollapsingToolbarBaseActivity
             return showPreference;
         }
 
-        public static boolean isGSAEnabled(Context context) {
-            try {
-                return context.getPackageManager().getApplicationInfo(GSA_PACKAGE, 0).enabled;
-            } catch (PackageManager.NameNotFoundException e) {
-                return false;
-            }
-        }
-
         private void updateIsGoogleAppEnabled() {
             if (mShowGoogleAppPref != null) {
-                mShowGoogleAppPref.setEnabled(isGSAEnabled(getContext()));
+                mShowGoogleAppPref.setEnabled(Utilities.isGSAEnabled(getContext()));
+            }
+            if (mShowGoogleBarPref != null) {
+                mShowGoogleBarPref.setEnabled(Utilities.isGSAEnabled(getContext()));
             }
         }
 
