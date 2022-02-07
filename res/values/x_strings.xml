@@ -79,4 +79,8 @@
     <!-- Recents -->
     <string name="action_lens">Lens</string>
 
+    <!-- Dock bar theme -->
+    <string name="dock_theme_title">Themed icons</string>
+    <string name="dock_theme_summary">Use themed icons for search bar</string>
+
 </resources>
