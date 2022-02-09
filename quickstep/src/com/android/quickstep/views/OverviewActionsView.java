@@ -112,12 +112,20 @@ public class OverviewActionsView<T extends OverlayUICallbacks> extends FrameLayo
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        findViewById(R.id.action_screenshot).setOnClickListener(this);
+        View screenshot = findViewById(R.id.action_screenshot);
+        View lens = findViewById(R.id.action_lens);
         if (getContext().getPackageManager().getLaunchIntentForPackage("com.google.ar.lens") != null) {
-            View lens = findViewById(R.id.action_lens);
             findViewById(R.id.action_lens).setOnClickListener(this);
             lens.setVisibility(VISIBLE);
             findViewById(R.id.lens_space).setVisibility(VISIBLE);
+            screenshot.setVisibility(GONE);
+            findViewById(R.id.screenshot_space).setVisibility(GONE);
+        } else {
+            findViewById(R.id.action_screenshot).setOnClickListener(this);
+            screenshot.setVisibility(VISIBLE);
+            findViewById(R.id.screenshot_space).setVisibility(VISIBLE);
+            lens.setVisibility(GONE);
+            findViewById(R.id.lens_space).setVisibility(GONE);
         }
         if (ENABLE_OVERVIEW_SHARE.get()) {
             View share = findViewById(R.id.action_share);
