@@ -152,6 +152,7 @@ public class SettingsActivity extends CollapsingToolbarBaseActivity
             case Utilities.KEY_DOCK_SEARCH:
             case Utilities.KEY_DOCK_THEME:
             case Utilities.KEY_SEARCH_RADIUS:
+            case Utilities.KEY_STATUS_BAR:
                  LauncherAppState.getInstanceNoCreate().setNeedsRestart();
                  break;
         }
