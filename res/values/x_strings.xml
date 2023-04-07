@@ -179,6 +179,6 @@
     <string name="pref_scroll_vibration_summary">Haptic feedback while scrolling through recent apps, if supported</string>
 
     <!-- Shake Clear Recents -->
-    <string name="shake_clear_summary">Or Shake phone to clear recents</string>
+    <string name="recents_shake_clear_all_title">Shake phone to clear all tasks</string>
 
 </resources>
