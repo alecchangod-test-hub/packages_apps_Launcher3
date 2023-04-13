@@ -169,6 +169,7 @@ public final class Utilities {
     public static final String KEY_APP_DRAWER_OPACITY = "pref_app_drawer_opacity";
     public static final String KEY_DRAWER_SEARCHBAR = "pref_drawer_searchbar";
     public static final String KEY_RECENTS_MEMINFO = "pref_recents_meminfo";
+    public static final String KEY_SHAKE_GESTURES = "shake_homescreen_gesture_torch";
 
     /**
      * Returns true if theme is dark.
@@ -898,5 +899,10 @@ public final class Utilities {
     public static boolean isShowMeminfo(Context context) {
         SharedPreferences prefs = LauncherPrefs.getPrefs(context.getApplicationContext());
         return prefs.getBoolean(KEY_RECENTS_MEMINFO, false);
+   }
+   
+    public static boolean homeScreenShakeTorch(Context context) {
+    	SharedPreferences prefs = LauncherPrefs.getPrefs(context.getApplicationContext());
+    	return prefs.getBoolean(KEY_SHAKE_GESTURES, false);
    }
 }
