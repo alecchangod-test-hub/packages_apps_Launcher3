@@ -161,6 +161,10 @@ public class Hotseat extends CellLayout implements Insettable {
         if (mOnVisibilityAggregatedCallback != null) {
             mOnVisibilityAggregatedCallback.accept(isVisible);
         }
+        
+        boolean mGestureEnabled = isVisible && !mIsBinded && Utilities.homeScreenShakeTorch(getContext());
+        mShakeUtils.bindShakeListener(this, mGestureEnabled);
+        mIsBinded = mGestureEnabled;
     }
 
     /** Sets a callback to be called onVisibilityAggregated */
