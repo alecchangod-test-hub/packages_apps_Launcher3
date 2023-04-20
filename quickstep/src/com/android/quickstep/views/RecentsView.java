@@ -534,6 +534,8 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
     private long mScrollLastHapticTimestamp;
 
     private float mScrollScale = 1f;
+    
+    private boolean mIsLandScape;
 
     /**
      * TODO: Call reloadIdNeeded in onTaskStackChanged.
@@ -1920,6 +1922,8 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
                 || mOrientationState.getRecentsActivityRotation() != ROTATION_0;
         mActionsView.updateHiddenFlags(HIDDEN_NON_ZERO_ROTATION,
                 !mOrientationState.isRecentsActivityRotationAllowed() && isInLandscape);
+                
+	mIsLandScape = isInLandscape;
 
         // Update TaskView's DeviceProfile dependent layout.
         updateChildTaskOrientations();
@@ -1932,6 +1936,10 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
         setCurrentPage(mCurrentPage);
     }
 
+    public boolean getLandScape() {
+        return mIsLandScape;
+    }
+   
     private void onOrientationChanged() {
         // If overview is in modal state when rotate, reset it to overview state without running
         // animation.
@@ -2486,7 +2494,6 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
 
         setEnableFreeScroll(true);
         setEnableDrawingLiveTile(mCurrentGestureEndTarget == GestureState.GestureEndTarget.RECENTS);
-        setRunningTaskViewShowScreenshot(true);
         setRunningTaskHidden(false);
         animateUpTaskIconScale();
         animateActionsViewIn();
@@ -5667,6 +5674,9 @@ public abstract class RecentsView<ACTIVITY_TYPE extends StatefulActivity<STATE_T
 
         boolean isInLandscape = mOrientationState.getTouchRotation() != ROTATION_0
                                 && mOrientationState.getTouchRotation() != ROTATION_180;
+
+	mIsLandScape = isInLandscape;
+
         int childCount = Math.min(mPageScrolls.length, getChildCount());
         int curScroll = isInLandscape ? getScrollY() : getScrollX();
 
