@@ -170,6 +170,8 @@ public final class Utilities {
     public static final String KEY_DRAWER_SEARCHBAR = "pref_drawer_searchbar";
     public static final String KEY_RECENTS_MEMINFO = "pref_recents_meminfo";
     public static final String KEY_SHAKE_GESTURES = "shake_homescreen_gesture_torch";
+    public static final String KEY_SHAKE_GESTURES_INTENSITY = "shake_homescreen_gesture_torch_intensity";
+    public static final String KEY_SHAKE_CLEAR_GESTURES_INTENSITY = "shake_clear_intensity";
 
     /**
      * Returns true if theme is dark.
@@ -905,4 +907,14 @@ public final class Utilities {
     	SharedPreferences prefs = LauncherPrefs.getPrefs(context.getApplicationContext());
     	return prefs.getBoolean(KEY_SHAKE_GESTURES, false);
    }
+
+    public static int homeScreenShakeTorchIntensity(Context context) {
+        SharedPreferences prefs = LauncherPrefs.getPrefs(context.getApplicationContext());
+        return prefs.getInt(KEY_SHAKE_GESTURES_INTENSITY, 4);
+    }
+    
+    public static int shakeClearIntensity(Context context) {
+        SharedPreferences prefs = LauncherPrefs.getPrefs(context.getApplicationContext());
+        return prefs.getInt(KEY_SHAKE_CLEAR_GESTURES_INTENSITY, 4);
+    }
 }
