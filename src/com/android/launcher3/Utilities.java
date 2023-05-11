@@ -174,6 +174,7 @@ public final class Utilities {
     public static final String KEY_SHAKE_CLEAR_GESTURES_INTENSITY = "shake_clear_intensity";
     public static final String KEY_VIBRATION_TOGGLE = "pref_recents_vibration";
     public static final String KEY_VIBRATION_INTENSITY = "pref_vib_intensity";
+    public static final String KEY_FORCE_MONOCHROME_ICONS = "pref_forced_monochrome_icons";
 
     /**
      * Returns true if theme is dark.
@@ -929,4 +930,9 @@ public final class Utilities {
         SharedPreferences prefs = LauncherPrefs.getPrefs(context.getApplicationContext());
         return prefs.getInt(KEY_VIBRATION_INTENSITY, 2);
     }
+    
+    public static boolean enableMonoChromeThemedIcons(Context context) {
+    	SharedPreferences prefs = LauncherPrefs.getPrefs(context.getApplicationContext());
+    	return prefs.getBoolean(KEY_FORCE_MONOCHROME_ICONS, false);
+   }
 }
