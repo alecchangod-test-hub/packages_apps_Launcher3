@@ -118,6 +118,9 @@
         <favorite
             launcher:packageName="com.oplus.camera"
             launcher:className="com.oplus.camera.Camera" />
+       <favorite
+            launcher:packageName="com.nothing.camera"
+            launcher:className="com.nothing.camera.activity.CameraActivity" />
     </resolve>
 
     <resolve
