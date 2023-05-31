@@ -173,6 +173,7 @@ public final class Utilities {
     public static final String KEY_SHAKE_GESTURES_INTENSITY = "shake_gestures_actions_intensity";
     public static final String KEY_SHAKE_CLEAR_GESTURES_INTENSITY = "shake_clear_intensity";
     public static final String KEY_VIBRATION_TOGGLE = "pref_recents_vibration";
+    public static final String KEY_VIBRATION_INTENSITY = "pref_vib_intensity";
 
     /**
      * Returns true if theme is dark.
@@ -923,4 +924,9 @@ public final class Utilities {
     	SharedPreferences prefs = LauncherPrefs.getPrefs(context.getApplicationContext());
     	return prefs.getBoolean(KEY_VIBRATION_TOGGLE, true);
    }
+   
+    public static int getVibrationIntensity(Context context) {
+        SharedPreferences prefs = LauncherPrefs.getPrefs(context.getApplicationContext());
+        return prefs.getInt(KEY_VIBRATION_INTENSITY, 2);
+    }
 }
